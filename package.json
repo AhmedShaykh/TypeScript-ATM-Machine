@@ -1,7 +1,7 @@
 {
   "name": "typescript-atm-machine",
   "version": "1.0.0",
-  "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +15,16 @@
   "bugs": {
     "url": "https://github.com/AhmedShaykh/TypeScript-ATM-Machine/issues"
   },
-  "homepage": "https://github.com/AhmedShaykh/TypeScript-ATM-Machine#readme"
+  "homepage": "https://github.com/AhmedShaykh/TypeScript-ATM-Machine#readme",
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "chalk-animation": "^2.0.3",
+    "inquirer": "^9.1.4"
+  },
+  "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/chalk-animation": "^1.6.1",
+    "@types/inquirer": "^9.0.3",
+    "@types/node": "^18.11.15"
+  }
 }
