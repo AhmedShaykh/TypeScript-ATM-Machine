@@ -22,20 +22,44 @@ await welcome();
 async function myATM() {
 
     type atmType = {
-        userId: string,
-        userPin: number
+        userId: number,
+        userPin: number,
+        accountType: string,
+        transactionType: string,
+        amount: string
     };
 
     const atm: atmType = await inquirer.prompt([
         {
             name: "userId",
-            type: "input",
-            message: "Enter Your ID: "
+            type: "number",
+            message: "Enter Your ID: ",
+            validate: (answer) => {
+                if (isNaN(answer)) {
+                    return "Please Enter A Number";
+                }
+                return true;
+            }
         },
         {
             name: "userPin",
             type: "password",
-            message: "Enter Your PIN: "
+            message: "Enter Your PIN: ",
+            validate: (answer) => {
+                if (isNaN(answer)) {
+                    return "Please Enter A Number";
+                }
+                return true;
+            }
+        },
+        {
+            name: "accountType",
+            type: "list",
+            message: "Select Your Account: \n",
+            choices: [
+                "Current",
+                "Saving"
+            ]
         },
         {
             name: "transactionType",
@@ -45,10 +69,54 @@ async function myATM() {
                 "View Balance",
                 "Deposit",
                 "Withdrawal"
-            ]
+            ],
+            when(answers) {
+                return answers.accountType
+            },
+        },
+        {
+            name: "amount",
+            type: "list",
+            message: "Select Your Amount: \n",
+            choices: [
+                1000,
+                2000,
+                10000,
+                20000
+            ],
+            when(answers) {
+                return answers.transactionType == "Withdrawal"
+            },
+        },
+        {
+            name: "amount",
+            type: "number",
+            message: "Enter Your Amount: \n",
+            when(answers) {
+                return answers.transactionType == "Deposit"
+            },
+            validate: (answer) => {
+                if (isNaN(answer)) {
+                    return "Please Enter A Number";
+                }
+                return true;
+            }
         }
     ]);
 
-    console.log(chalk.cyan(`${atm.userId}`));
+    console.log(`${atm.userId} ${atm.userPin}`);
+
+    if (atm.userId && atm.userPin) {
+
+        const balance = 150000;
+
+        if (atm.transactionType == "View Balance") {
+            console.log(balance);
+        }
+
+        const enterAmount = atm.amount;
+        console.log(enterAmount);
+
+    }
 
 };
