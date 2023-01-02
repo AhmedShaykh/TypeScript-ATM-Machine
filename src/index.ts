@@ -104,19 +104,21 @@ async function myATM() {
         }
     ]);
 
-    console.log(`${atm.userId} ${atm.userPin}`);
+    // if (atm.userId && atm.userPin) {
 
-    if (atm.userId && atm.userPin) {
+    const balance: number = 150000;
 
-        const balance = 150000;
-
-        if (atm.transactionType == "View Balance") {
-            console.log(balance);
-        }
-
-        const enterAmount = atm.amount;
-        console.log(enterAmount);
-
+    if (atm.transactionType == "View Balance") {
+        console.log(balance);
     }
 
+    // }
+
+    return await atmMachine(atm.userId, atm.userPin, atm.transactionType, atm.amount, balance, atm.accountType)
+
 };
+
+const atmMachine = async (userId: number, userPin: number, transactionType: string, amount: string, balance: number, accountType: string) => {
+
+    switch ()
+}
