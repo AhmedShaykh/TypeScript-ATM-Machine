@@ -14,7 +14,7 @@ async function welcome() {
 
     animation.stop();
 
-    myATM();
+    startAgain();
 };
 
 await welcome();
@@ -22,44 +22,36 @@ await welcome();
 async function myATM() {
 
     type atmType = {
-        userId: number,
+        userId: string,
         userPin: number,
-        accountType: string,
         transactionType: string,
-        amount: string
+        amount: number
     };
+
+    let balance: number = 150000;
 
     const atm: atmType = await inquirer.prompt([
         {
             name: "userId",
-            type: "number",
-            message: "Enter Your ID: ",
-            validate: (answer) => {
-                if (isNaN(answer)) {
-                    return "Please Enter A Number";
-                }
-                return true;
-            }
+            type: "input",
+            message: "Enter Your ID: "
         },
         {
             name: "userPin",
             type: "password",
             message: "Enter Your PIN: ",
             validate: (answer) => {
-                if (isNaN(answer)) {
+                if (isNaN(answer) && answer.length < 4) {
+                    return "Please Enter A Number & Min 4 Digits";
+                }
+                else if (isNaN(answer)) {
                     return "Please Enter A Number";
+                }
+                else if (answer.length < 4) {
+                    return "Please Enter Min 4 Digits";
                 }
                 return true;
             }
-        },
-        {
-            name: "accountType",
-            type: "list",
-            message: "Select Your Account: \n",
-            choices: [
-                "Current",
-                "Saving"
-            ]
         },
         {
             name: "transactionType",
@@ -70,9 +62,6 @@ async function myATM() {
                 "Deposit",
                 "Withdrawal"
             ],
-            when(answers) {
-                return answers.accountType
-            },
         },
         {
             name: "amount",
@@ -80,9 +69,12 @@ async function myATM() {
             message: "Select Your Amount: \n",
             choices: [
                 1000,
-                2000,
+                5000,
                 10000,
-                20000
+                20000,
+                50000,
+                140000,
+                150000
             ],
             when(answers) {
                 return answers.transactionType == "Withdrawal"
@@ -104,21 +96,41 @@ async function myATM() {
         }
     ]);
 
-    // if (atm.userId && atm.userPin) {
-
-    const balance: number = 150000;
-
-    if (atm.transactionType == "View Balance") {
-        console.log(balance);
-    }
-
-    // }
-
-    return await atmMachine(atm.userId, atm.userPin, atm.transactionType, atm.amount, balance, atm.accountType)
+    switch (atm.transactionType) {
+        case "View Balance":
+            console.log(chalk.cyan(balance));
+            break;
+        case "Withdrawal":
+            balance = balance - atm.amount;
+            if (balance === 10000) {
+                console.log(chalk.yellow(balance));
+                break;
+            }
+            else if (balance === 0) {
+                console.log(chalk.red(balance));
+                break;
+            }
+            console.log(chalk.cyan(balance));
+            break;
+        case "Deposit":
+            balance = balance + atm.amount;
+            console.log(chalk.cyan(balance));
+            break;
+        default:
+            return;
+    };
 
 };
 
-const atmMachine = async (userId: number, userPin: number, transactionType: string, amount: string, balance: number, accountType: string) => {
+async function startAgain() {
+    do {
+        await myATM();
 
-    switch ()
-}
+        var againATM = await inquirer.prompt({
+            type: "input",
+            name: "restart",
+            message: "Do you want Continue Transaction ? Press y or n: "
+        });
+
+    } while (againATM.restart === 'y' || againATM.restart === 'Y' || againATM.restart === 'yes' || againATM.restart === 'Yes' || againATM.restart === 'YES');
+};
