@@ -72,9 +72,7 @@ async function myATM() {
                 5000,
                 10000,
                 20000,
-                50000,
-                140000,
-                150000
+                50000
             ],
             when(answers) {
                 return answers.transactionType == "Withdrawal"
@@ -98,23 +96,15 @@ async function myATM() {
 
     switch (atm.transactionType) {
         case "View Balance":
-            console.log(chalk.cyan(balance));
+            console.log(chalk.cyan(`Your Balance: ${balance}`));
             break;
         case "Withdrawal":
             balance = balance - atm.amount;
-            if (balance === 10000) {
-                console.log(chalk.yellow(balance));
-                break;
-            }
-            else if (balance === 0) {
-                console.log(chalk.red(balance));
-                break;
-            }
-            console.log(chalk.cyan(balance));
+            console.log(chalk.cyan(`Your Amount ${atm.amount}, Your Balance: ${balance}`))
             break;
         case "Deposit":
             balance = balance + atm.amount;
-            console.log(chalk.cyan(balance));
+            console.log(chalk.cyan(`Your Amount ${atm.amount}, Your Balance: ${balance}`))
             break;
         default:
             return;
