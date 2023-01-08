@@ -14,23 +14,19 @@ async function welcome() {
 
     animation.stop();
 
-    startAgain();
+    myATM();
 };
 
 await welcome();
 
 async function myATM() {
 
-    type atmType = {
-        userId: string,
-        userPin: number,
-        transactionType: string,
-        amount: number
-    };
+    type Input = {
+        userId: String;
+        userPin: Number;
+    }
 
-    let balance: number = 150000;
-
-    const atm: atmType = await inquirer.prompt([
+    const userInput: Input = await inquirer.prompt([
         {
             name: "userId",
             type: "input",
@@ -52,7 +48,16 @@ async function myATM() {
                 }
                 return true;
             }
-        },
+        }
+    ]);
+
+    const userData = {
+        userId: userInput.userId,
+        userPin: userInput.userPin,
+        amount: Math.floor(Math.random() * 100000 + 1)
+    }
+
+    const atm: { transactionType: String } = await inquirer.prompt([
         {
             name: "transactionType",
             type: "list",
@@ -63,64 +68,64 @@ async function myATM() {
                 "Withdrawal"
             ],
         },
-        {
-            name: "amount",
-            type: "list",
-            message: "Select Your Amount: \n",
-            choices: [
-                1000,
-                5000,
-                10000,
-                20000,
-                50000
-            ],
-            when(answers) {
-                return answers.transactionType == "Withdrawal"
-            },
-        },
-        {
-            name: "amount",
-            type: "number",
-            message: "Enter Your Amount: \n",
-            when(answers) {
-                return answers.transactionType == "Deposit"
-            },
-            validate: (answer) => {
-                if (isNaN(answer)) {
-                    return "Please Enter A Number";
-                }
-                return true;
-            }
-        }
+        //     {
+        //         name: "amount",
+        //         type: "list",
+        //         message: "Select Your Amount: \n",
+        //         choices: [
+        //             1000,
+        //             5000,
+        //             10000,
+        //             20000,
+        //             50000
+        //         ],
+        //         when(answers) {
+        //             return answers.transactionType == "Withdrawal"
+        //         },
+        //     },
+        //     {
+        //         name: "amount",
+        //         type: "number",
+        //         message: "Enter Your Amount: \n",
+        //         when(answers) {
+        //             return answers.transactionType == "Deposit"
+        //         },
+        //         validate: (answer) => {
+        //             if (isNaN(answer)) {
+        //                 return "Please Enter A Number";
+        //             }
+        //             return true;
+        //         }
+        //     }
     ]);
 
-    switch (atm.transactionType) {
-        case "View Balance":
-            console.log(chalk.cyan(`Your Balance: ${balance}`));
-            break;
-        case "Withdrawal":
-            balance = balance - atm.amount;
-            console.log(chalk.cyan(`Your Amount ${atm.amount}, Your Balance: ${balance}`))
-            break;
-        case "Deposit":
-            balance = balance + atm.amount;
-            console.log(chalk.cyan(`Your Amount ${atm.amount}, Your Balance: ${balance}`))
-            break;
-        default:
-            return;
-    };
-
+    //     switch (atm.transactionType) {
+    //         case "View Balance":
+    //             console.log(chalk.cyan(`Your Balance: ${balance}`));
+    //             break;
+    //         case "Withdrawal":
+    //             balance = balance - atm.amount;
+    //             console.log(chalk.cyan(`Your Amount ${atm.amount}, Your Balance: ${balance}`))
+    //             break;
+    //         case "Deposit":
+    //             balance = balance + atm.amount;
+    //             console.log(chalk.cyan(`Your Amount ${atm.amount}, Your Balance: ${balance}`))
+    //             break;
+    //         default:
+    //             return;
 };
 
-async function startAgain() {
-    do {
-        await myATM();
+// };
 
-        var againATM = await inquirer.prompt({
-            type: "input",
-            name: "restart",
-            message: "Do you want Continue Transaction ? Press y or n: "
-        });
+// async function startAgain() {
+//     do {
+//         await myATM();
 
-    } while (againATM.restart === 'y' || againATM.restart === 'Y' || againATM.restart === 'yes' || againATM.restart === 'Yes' || againATM.restart === 'YES');
-};
+//         var againATM = await inquirer.prompt({
+//             type: "input",
+//             name: "restart",
+//             message: "Do you want Continue Transaction ? Press y or n: "
+//         });
+
+//     } while (againATM.restart === 'y' || againATM.restart === 'Y' || againATM.restart === 'yes' || againATM.restart === 'Yes' || againATM.restart === 'YES');
+// };
