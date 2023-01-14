@@ -16,16 +16,16 @@ async function welcome() {
 
     animation.stop();
 
-    myATM();
+    myCard();
 };
 
 await welcome();
 
-async function myATM() {
+async function myCard() {
 
     type Input = {
-        userId: String;
-        userPin: Number;
+        userId: string;
+        userPin: number;
     }
 
     const userInput: Input = await inquirer.prompt([
@@ -56,74 +56,104 @@ async function myATM() {
     const userData = {
         userId: userInput.userId,
         userPin: userInput.userPin,
-    }
-
-    while (userData) {
-
-        const atm: { transactionType: String, amount: Number } = await inquirer.prompt([
-            {
-                name: "transactionType",
-                type: "list",
-                message: "Select Your Transaction: \n",
-                choices: [
-                    "View Balance",
-                    "Deposit",
-                    "Withdrawal"
-                ],
-            },
-            {
-                name: "amount",
-                type: "list",
-                message: "Select Your Amount: \n",
-                choices: [
-                    1000,
-                    5000,
-                    10000,
-                    20000,
-                    50000
-                ],
-                when(answers) {
-                    return answers.transactionType == "Withdrawal"
-                },
-            },
-            {
-                name: "amount",
-                type: "number",
-                message: "Enter Your Amount: \n",
-                when(answers) {
-                    return answers.transactionType == "Deposit"
-                },
-                validate: (answer) => {
-                    if (isNaN(answer)) {
-                        return "Please Enter A Number";
-                    }
-                    return true;
-                }
-            },
-            // {
-            //     name: "againATM",
-            //     type: "confirm",
-            //     message: "Do you want Continue ?: \n",
-            //     default: false
-            // }
-        ]);
-
-        let balance: Number = 100000;
-
-        switch (atm.transactionType) {
-            case "View Balance":
-                console.log(chalk.cyan(`Your Balance: ${balance}`));
-                break;
-            case "Withdrawal":
-                balance = atm.amount;
-                console.log(chalk.cyan(`Your Amount ${atm.amount}, Your Balance: ${balance}`));
-                break;
-            case "Deposit":
-                balance = atm.amount;
-                console.log(chalk.cyan(`Your Amount ${atm.amount}, Your Balance: ${balance}`));
-                break;
-            default:
-                return;
-        };
     };
+
+    return await startAgain(userData.userId, userData.userPin);
+};
+
+async function myATM() {
+
+    const atm: { transactionType: string, amount: number } = await inquirer.prompt([
+        {
+            name: "transactionType",
+            type: "list",
+            message: "Select Your Transaction: \n",
+            choices: [
+                "View Balance",
+                "Deposit",
+                "Withdrawal"
+            ],
+        },
+        {
+            name: "amount",
+            type: "list",
+            message: "Select Your Amount: \n",
+            choices: [
+                1000,
+                5000,
+                10000,
+                20000,
+                50000
+            ],
+            when(answers) {
+                return answers.transactionType == "Withdrawal"
+            },
+        },
+        {
+            name: "amount",
+            type: "number",
+            message: "Enter Your Amount: \n",
+            when(answers) {
+                return answers.transactionType == "Deposit"
+            },
+            validate: (answer) => {
+                if (isNaN(answer)) {
+                    return "Please Enter A Number";
+                }
+                return true;
+            }
+        }
+    ]);
+
+    return await atmCalculation(atm.amount, atm.transactionType);
+
+};
+
+let balance: number = 100000;
+
+const atmCalculation = async (amount: number, transactionType: string) => {
+
+    switch (transactionType) {
+        case "View Balance":
+            console.log(chalk.cyan(`Your Balance: ${balance}`));
+            break;
+        case "Withdrawal":
+            if (balance < amount) {
+                console.log(chalk.red('Sorry You Have No Money'));
+                break;
+            } else {
+                balance -= amount;
+                console.log(chalk.cyan(`Your Amount ${amount}`));
+            }
+            break;
+        case "Deposit":
+            balance += amount;
+            console.log(chalk.cyan(`Your Amount ${amount}`));
+            break;
+        default:
+            return;
+    };
+
+};
+
+async function startAgain(userId: string, userPin: number) {
+    do {
+        if (userId && userPin) {
+
+            if (balance < 1000) {
+                console.log(chalk.cyan('Sorry You Have No Money'));
+                break;
+            } else {
+                await myATM();
+            }
+
+        };
+
+        var againCal = await inquirer.prompt({
+            type: "input",
+            name: "restart",
+            message: "Do you want Transaction ? Press y or n: "
+        });
+
+    } while (againCal.restart === 'y' || againCal.restart === 'Y' || againCal.restart === 'yes' || againCal.restart === 'Yes' || againCal.restart === 'YES');
 };
