@@ -146,7 +146,7 @@ async function startAgain(userId: string, userPin: number) {
     do {
         if (userId && userPin) {
             if (balance === 1000) {
-                console.log(chalk.red(`You Balance Is ${balance} Dollars!`));
+                console.log(chalk.red(`Sorry, You Balance Is Rs.${balance}!`));
                 break;
             } else {
                 await myATM();

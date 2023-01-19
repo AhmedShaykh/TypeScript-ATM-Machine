@@ -1,3 +1,3 @@
 # TypeScript ATM Machine CLI!
 
-npx ahmx-atm-cli
+npx ahmx-atm-mac-cli

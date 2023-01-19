@@ -1,5 +1,5 @@
 {
-  "name": "ahmx-atm-cli",
+  "name": "ahmx-atm-mac-cli",
   "version": "1.0.0",
   "type": "module",
   "main": "bin/index.js",
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/AhmedShaykh/TypeScript-ATM-Machine#readme",
   "bin": {
-    "ahmx-atm-cli": "bin/index.js"
+    "ahmx-atm-mac-cli": "bin/index.js"
   },
   "dependencies": {
     "chalk": "^5.2.0",
