@@ -11,7 +11,7 @@ const runAnimation = () => {
 };
 
 async function welcome() {
-    let animation = chalkAnimation.rainbow("Welcome to ATM Machine");
+    let animation = chalkAnimation.rainbow("Welcome to ATM Machine:");
     await runAnimation();
 
     animation.stop();
@@ -32,7 +32,13 @@ async function myCard() {
         {
             name: "userId",
             type: "input",
-            message: "Enter Your ID: "
+            message: "Enter Your ID: ",
+            validate: (answer) => {
+                if (answer.length < 4) {
+                    return "Please Enter Min 4 Digits In Your User ID"
+                }
+                return true;
+            }
         },
         {
             name: "userPin",
@@ -119,16 +125,16 @@ const atmCalculation = async (amount: number, transactionType: string) => {
             break;
         case "Withdrawal":
             if (balance < amount) {
-                console.log(chalk.red('Sorry You Have No Money'));
+                console.log(chalk.red('Sorry Your Balance Is Less Than Your Amount!'));
                 break;
             } else {
                 balance -= amount;
-                console.log(chalk.cyan(`Your Amount ${amount}`));
+                console.log(chalk.cyan(`Your Withdrawal ${amount}`));
             }
             break;
         case "Deposit":
             balance += amount;
-            console.log(chalk.cyan(`Your Amount ${amount}`));
+            console.log(chalk.cyan(`Your Deposit ${amount}`));
             break;
         default:
             return;
@@ -139,14 +145,12 @@ const atmCalculation = async (amount: number, transactionType: string) => {
 async function startAgain(userId: string, userPin: number) {
     do {
         if (userId && userPin) {
-
-            if (balance < 1000) {
-                console.log(chalk.cyan('Sorry You Have No Money'));
+            if (balance === 1000) {
+                console.log(chalk.red(`You Balance Is ${balance} Dollars!`));
                 break;
             } else {
                 await myATM();
             }
-
         };
 
         var againCal = await inquirer.prompt({
